@@ -6,3 +6,4 @@ python-dotenv
 aiohttp
 httpx
 aiosmtplib
+# imaplib, email, logging are part of Python stdlib
