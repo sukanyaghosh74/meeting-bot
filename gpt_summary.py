@@ -1,14 +1,24 @@
 import os
 import openai
 import logging
+from functools import lru_cache
+import asyncio
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 logger = logging.getLogger("meeting-prep-bot")
 
+@lru_cache(maxsize=32)
+def cached_generate_meeting_brief(meeting_name, emails, tasks, crm_data):
+    """
+    Synchronous wrapper for caching meeting briefs. Calls async generator via asyncio.
+    """
+    loop = asyncio.get_event_loop()
+    return loop.run_until_complete(generate_meeting_brief(meeting_name, emails, tasks, crm_data))
+
 async def generate_meeting_brief(meeting_name, emails, tasks, crm_data):
     """
     Generate a structured meeting brief using OpenAI GPT-4 (fallback to GPT-3.5-turbo).
-    Returns a formatted string summary.
+    Returns a formatted string summary. Caching is handled by a sync wrapper.
     """
     prompt = f"""
 You are an AI assistant. Summarize the following information for a meeting brief. Structure as:
