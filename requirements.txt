@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+slack_sdk
+openai
+python-dotenv
+aiohttp
+httpx
+aiosmtplib
